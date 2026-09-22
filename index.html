@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dopamine Planner 2026</title>
+<script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
+<style>
+:root{
+ --green:#6f8b55;--deep:#3f5531;--sage:#dce8c9;--cream:#fff7e8;
+ --pink:#f3b7c5;--hot:#df687e;--red:#b94d5f;--brown:#76523c;
+ --ink:#3d342d;--paper:#fffaf0;--line:#cdbfae;--shadow:0 10px 25px rgba(63,55,42,.12);
+}
+*{box-sizing:border-box} body{margin:0;background:#e7efd9;color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}.app{max-width:1500px;margin:auto;padding:22px}
+.hero{background:linear-gradient(135deg,#78945b,#dce8c9 55%,#f4bdc8);border:3px solid var(--deep);border-radius:32px;padding:24px;display:flex;justify-content:space-between;gap:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:"♥ ✦ ♡ ✿";position:absolute;right:20px;bottom:8px;font-size:46px;color:#fff6;letter-spacing:16px}
+.hero h1{font-size:clamp(42px,6vw,88px);line-height:.8;margin:14px 0;color:#fff7e8;text-shadow:4px 4px 0 var(--brown);font-weight:950;letter-spacing:-3px}
+.hero h1 i{color:#ffd9e0;font-style:normal}.hero p{font-weight:800;color:#fff}.sticker{display:inline-block;background:#fff7e8;border:2px solid var(--brown);padding:7px 12px;border-radius:99px;transform:rotate(-3deg);font-weight:900}
+.today{align-self:center;background:var(--cream);border:3px solid var(--brown);border-radius:25px;padding:18px 22px;text-align:center;min-width:170px;transform:rotate(2deg)}
+.today small{display:block;font-weight:900;color:var(--red)}.today strong{display:block;font-size:58px;line-height:1;color:var(--green)}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.nav button,.pill{border:2px solid var(--brown);background:var(--cream);padding:10px 14px;border-radius:16px;cursor:pointer;font-weight:900;box-shadow:3px 3px 0 #b9a48e}.nav button:hover{transform:translateY(-2px)}
+.layout{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(290px,.8fr);gap:16px}.panel{background:var(--paper);border:2px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.panel h2{margin:0 0 12px;color:var(--deep);font-size:20px}.calendar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.month{background:#f8f0df;border:2px solid #c9b79f;border-radius:20px;padding:10px}.month h3{margin:0 0 8px;color:var(--brown);font-size:18px}.dow,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.dow b{font-size:10px;text-align:center;color:var(--red)}.day{border:1px solid #d9cdbd;background:#fffdf7;border-radius:9px;min-height:33px;cursor:pointer;position:relative;font-weight:800;color:var(--ink)}.day:hover{outline:2px solid var(--pink)}.day.today{background:var(--pink);border-color:var(--red)}.day.past{opacity:.45}.day.done{opacity:.18;text-decoration:line-through}.day .dot{position:absolute;right:3px;bottom:2px;color:var(--red);font-size:9px}.legend{font-size:12px;margin-top:8px;color:#66584e}
+.side label,.checks label{display:block;padding:6px 0;font-weight:700}.side input,.checks input{accent-color:var(--red)}
+.meals{display:grid;gap:8px}.meal{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:10px;border-radius:14px;background:#edf3e2;border:1px dashed #a9b990}.meal b{color:var(--deep)}.meal em{font-style:normal;font-weight:900;color:var(--red);white-space:nowrap}.note{font-size:12px;color:#6d6057;background:#fff2f3;padding:10px;border-radius:12px}
+.workouts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.workout-card{background:#f6e7e8;border:2px solid #c78d99;border-radius:18px;padding:12px}.workout-card h3{margin:0;color:var(--red)}.exercise{display:flex;gap:9px;align-items:center;padding:8px 0;border-top:1px dashed #c9a4aa}.exercise:first-of-type{border-top:0}.exercise svg{width:66px;height:66px;flex:none;background:#fff8ed;border-radius:13px;border:1px solid #d4c4b4}.exercise b{display:block}.exercise span{font-size:12px;color:#6e5b52}
+.timeline{display:grid;gap:7px}.timeline div{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 10px;border-radius:12px;background:#edf3e2}.timeline span{font-weight:900;color:var(--brown)}
+textarea{width:100%;min-height:120px;border:2px dashed #c8b7a2;border-radius:15px;padding:12px;background:#fffdf7;resize:vertical}
+.progress{height:12px;border-radius:99px;background:#eadbd5;overflow:hidden}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--red),var(--pink));transition:.2s}
+.small{font-size:12px;color:#6f6259}.quote{font-family:cursive;font-size:19px;color:var(--brown);transform:rotate(-2deg)}
+.modal{position:fixed;inset:0;background:#342c2688;display:flex;align-items:center;justify-content:center;padding:18px;z-index:99}.modalbox{width:min(1050px,100%);max-height:94vh;overflow:auto;background:#fff8ea;border:3px solid var(--brown);border-radius:28px;padding:18px;box-shadow:0 20px 70px #0005}.modalhead{display:flex;justify-content:space-between;gap:15px;align-items:center}.close{border:0;background:#f2c4cc;border-radius:50%;width:40px;height:40px;font-size:25px;cursor:pointer}.complete{border:2px solid var(--deep);background:var(--green);color:white;padding:10px 14px;border-radius:15px;font-weight:900;cursor:pointer}.complete.done{opacity:.45}.daygrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sectiontitle{font-size:18px;color:var(--deep);margin:0 0 9px}.tag{display:inline-block;background:#f3b7c5;border:1px solid var(--red);padding:5px 8px;border-radius:10px;font-size:12px;font-weight:900;margin:3px}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.calendar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.hero{display:block}.calendar,.workouts,.daygrid{grid-template-columns:1fr}.meal{grid-template-columns:1fr}.today{margin-top:15px}.app{padding:10px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const WEEK=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const TODAY='2026-09-22';
+const shifts={1:'18:00–00:00',2:'18:00–00:00',3:'Выходной',4:'Выходной',5:'19:00–01:00',6:'19:00–01:00',0:'Выходной'};
+const trainingByDow={1:'D1',3:'D2',5:'D3',0:'D4'};
+const trainingNames={D1:'Спина / плечи',D2:'Переднее бедро / ягодицы',D3:'Грудь / руки',D4:'Заднее бедро / ягодицы'};
+const skinCycle=['Эссенция от чёрных точек','Тканевая маска','Эссенция с брусникой'];
+const exercises={
+D1:[
+['Тяга резинки сверху','3×12','Закрепи резинку высоко; тяни локти вниз к рёбрам.'],
+['Тяга резинки к поясу','3×12','Сиди/стой ровно; тяни резинку к талии.'],
+['Face pull с резинкой','3×15','Тяни к лицу, локти в стороны.'],
+['Разведения рук в стороны','3×15','Лёгкая резинка, плечи не поднимай.'],
+['Pull-apart','2×15','Растягивай резинку перед грудью.'],
+['Планка','3×30–60 сек','Корпус прямой, живот подтянут.']],
+D2:[
+['Присед с резинкой','4×10','Резинка над коленями, колени следуют за носками.'],
+['Обратные выпады','3×10/нога','Шаг назад, корпус стабильный.'],
+['Болгарский присед','3×10/нога','Задняя нога на диване/стуле.'],
+['Шаги в сторону','3×15/сторона','Резинка над коленями или на голенях.'],
+['Ягодичный мост','4×12','Резинка над коленями, пауза вверху.'],
+['Отведение ноги назад','3×15/нога','Закрепи резинку низко, не прогибай поясницу.']],
+D3:[
+['Жим резинки от груди','3×12','Резинка за спиной; выжимай руки вперёд.'],
+['Отжимания с резинкой','3×8–12','Резинка за спиной; вариант от колен допустим.'],
+['Разгибание на трицепс','3×12','Резинка закреплена сверху.'],
+['Сгибание на бицепс','3×12','Наступи на резинку и сгибай локти.'],
+['Разведения назад','2×15','Лёгкая резинка, своди лопатки.'],
+['Планка','3×30–60 сек','Держи корпус одной линией.']],
+D4:[
+['Румынская тяга с резинкой','3×10','Наступи на резинку и держи спину нейтрально.'],
+['Good morning с резинкой','3×12','Резинка за плечами; отводи таз назад.'],
+['Болгарский присед','3×10/нога','Медленно опускайся, толкайся пяткой.'],
+['Ягодичный мост','4×10–12','Пауза 1–2 сек в верхней точке.'],
+['Сгибание ноги с резинкой','3×12/нога','Ляг на живот, тяни пятку к ягодице.'],
+['Clamshell','3×15/сторона','Лёжа на боку, колени согнуты; не разворачивай таз.']]
+};
+const state=JSON.parse(localStorage.getItem('dopaminePlanner2026_v2')||'{}');
+const save=()=>localStorage.setItem('dopaminePlanner2026_v2',JSON.stringify(state));
+const key=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const dow=(y,m,d)=>new Date(y,m,d).getDay();
+const done=k=>!!state[k]?.done;
+const toggleDone=k=>{state[k]??={};state[k].done=!state[k].done;save();render();openDay(k)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function exSvg(i){
+ const poses=[
+ `<circle cx="50" cy="18" r="8"/><path d="M50 27v25m0-18-22 13m22-13 22 13M50 52l-15 25m15-25 18 25"/><path d="M20 37h60" stroke-width="7"/>`,
+ `<circle cx="50" cy="18" r="8"/><path d="M50 27v25m0-17-25 8m25-8 25 8M50 52 35 78m15-26 18 26"/><path d="M18 35h64" stroke-width="5"/>`,
+ `<circle cx="50" cy="18" r="8"/><path d="M50 27v22m0-15-25-8m25 8 25-8M50 49 35 77m15-28 18 28"/><path d="M24 35h52" stroke-width="5"/>`,
+ `<circle cx="50" cy="18" r="8"/><path d="M50 27 38 50m12-23 14 22M38 50l-15 25m27-25 16 25"/><path d="M28 37 72 37" stroke-width="5"/>`
+ ];
+ return `<svg viewBox="0 0 100 90" fill="none" stroke="#76523c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${poses[i%poses.length]}</svg>`;
+}
+function calendarMonth(m){
+ const first=new Date(2026,m,1), total=new Date(2026,m+1,0).getDate(), start=(first.getDay()+6)%7;
+ let cells=Array(start).fill('<span></span>').join('');
+ for(let d=1;d<=total;d++){
+   const k=key(2026,m,d), isPast=k<TODAY, tr=trainingByDow[dow(2026,m,d)];
+   cells+=`<button class="day ${k===TODAY?'today':''} ${isPast?'past':''} ${done(k)?'done':''}" onclick="openDay('${k}')">${d}${tr?'<i class="dot">♥</i>':''}</button>`;
+ }
+ return `<div class="month"><h3>${MONTHS[m]}</h3><div class="dow">${WEEK.map(x=>`<b>${x}</b>`).join('')}</div><div class="days">${cells}</div></div>`;
+}
+function nutritionHtml(){
+ return `<div class="panel"><h2>🥗 Питание ≈ 1300 ккал • Vũng Tàu</h2>
+ <div class="meals">
+ <div class="meal"><b>🍳 Завтрак</b><span>2 яйца + рис 120 г готового + овощи 150 г</span><em>≈330 ккал</em></div>
+ <div class="meal"><b>🍗 Обед</b><span>грудка 150 г готовой + рис 150 г готового + овощи 250 г</span><em>≈520 ккал</em></div>
+ <div class="meal"><b>🥛 Перекус</b><span>йогурт натуральный без сахара 200 г</span><em>≈120 ккал</em></div>
+ <div class="meal"><b>🥬 Ужин</b><span>грудка 100 г готовой + рис 100 г готового + овощи 250 г</span><em>≈330 ккал</em></div>
+ </div>
+ <p class="note">Ориентир ≈1300 ккал. Без сладкого и сладких напитков. Креветки можно иногда использовать вместо части грудки. Масло и соусы учитывай отдельно; конкретные калории зависят от упаковки и приготовления.</p>
+ <div class="tag">🛒 Рис</div><div class="tag">🍗 Грудка</div><div class="tag">🥚 Яйца</div><div class="tag">🥦 Овощи</div><div class="tag">🥛 Йогурт без сахара</div><div class="tag">🦐 Креветки редко</div>
+ </div>`;
+}
+function dayRoutine(dowNum){
+ const shift=shifts[dowNum], training=trainingByDow[dowNum];
+ const sleep=shift==='19:00–01:00'?'02:00–10:00':shift==='18:00–00:00'?'01:30–09:30':'01:00–09:00';
+ const skin=skinCycle[(new Date(2026,8,22).getDate()+dowNum)%3];
+ return `<div class="panel"><h3 class="sectiontitle">🕒 Расписание дня</h3>
+ <div class="timeline">
+ <div><b>☀️ Подъём</b><span>09:00–10:00</span></div><div><b>💧 Утро</b><span>вода · умывание · завтрак</span></div>
+ <div><b>💻 Личное время</b><span>11:00–13:00</span></div><div><b>🍚 Обед</b><span>13:00</span></div>
+ ${training?`<div><b>🏋️ Тренировка + йога</b><span>15:00–16:15</span></div>`:''}
+ <div><b>🚿 Душ + уход перед работой</b><span>${shift==='Выходной'?'18:00':'за 45–60 мин'}</span></div>
+ <div><b>💼 Работа</b><span>${shift}</span></div><div><b>🌙 Сон</b><span>${sleep}</span></div>
+ </div>
+ <p><span class="tag">✨ Сегодня: ${skin}</span><span class="tag">🧴 после душа: руки · локти · колени · ступни</span></p>
+ </div>`;
+}
+function openDay(k){
+ const [y,mo,d]=k.split('-').map(Number), dn=dow(y,mo-1,d), tr=trainingByDow[dn], isD=done(k);
+ const ex=tr?`<div class="panel"><h3 class="sectiontitle">🏋️ ${trainingNames[tr]} + резинка</h3>${exercises[tr].map((e,i)=>`<div class="exercise">${exSvg(i)}<div><b>${i+1}. ${esc(e[0])}</b><span>${esc(e[1])} · ${esc(e[2])}</span></div></div>`).join('')}<p class="small">🧘 После комплекса: 15–20 минут спокойной йоги/растяжки.</p></div>`:'';
+ const notes=state[k]?.notes||'';
+ document.getElementById('modal')?.remove();
+ const el=document.createElement('div');el.className='modal';el.id='modal';
+ el.innerHTML=`<div class="modalbox"><div class="modalhead"><div><span class="tag">${WEEK[dn]} · ${d}.${String(mo).padStart(2,'0')}.2026</span><h1 style="margin:8px 0;color:var(--deep)">${d} ${MONTHS[mo-1]}</h1></div><div><button class="complete ${isD?'done':''}" onclick="toggleDone('${k}')">${isD?'✓ День отмечен':'✓ Отметить день'}</button> <button class="close" onclick="closeDay()">×</button></div></div>
+ <div class="daygrid"><div>${dayRoutine(dn)}${nutritionHtml()}</div><div>${ex}<div class="panel"><h3 class="sectiontitle">📝 Моё на сегодня</h3><textarea id="notes" placeholder="Запиши свои дела, важные даты, настроение, что хочешь не забыть...">${esc(notes)}</textarea><button class="complete" style="margin-top:8px" onclick="saveNotes('${k}')">Сохранить</button></div><div class="panel"><h3 class="sectiontitle">☑️ Ежедневно</h3><div class="checks">${['Вода','Питание по плану','Уход за собой','Увлажнение после душа','Личное время','Шаг к отказу от курения'].map(x=>`<label><input type="checkbox"> ${x}</label>`).join('')}</div></div></div></div></div>`;
+ document.body.appendChild(el);
+}
+function saveNotes(k){state[k]??={};state[k].notes=document.getElementById('notes').value;save();alert('Сохранено 💚')}
+function closeDay(){document.getElementById('modal')?.remove()}
+function render(){
+ document.getElementById('root').innerHTML=`<div class="app">
+ <header class="hero"><div><span class="sticker">✨ мой 2026</span><h1>DOPAMINE<br><i>PLANNER</i></h1><p>зелёный · красный · коричневый · розовый · стикеры · маленькие победы</p></div><div class="today"><small>СЕГОДНЯ</small><strong>22</strong><b>сентября · вторник</b></div></header>
+ <div class="nav"><button onclick="openDay(TODAY)">💚 Открыть сегодня</button><button onclick="document.getElementById('calendar').scrollIntoView({behavior:'smooth'})">📅 2026</button><button onclick="document.getElementById('workouts').scrollIntoView({behavior:'smooth'})">🏋️ Тренировки</button><button onclick="document.getElementById('food').scrollIntoView({behavior:'smooth'})">🥗 Питание</button></div>
+ <div class="layout"><main>
+ <section class="panel" id="calendar"><h2>📅 Весь 2026 — нажми на любой день</h2><div class="calendar">${Array.from({length:12},(_,m)=>calendarMonth(m)).join('')}</div><div class="legend">♥ = день с тренировкой · розовый = сегодня · бледный = прошедший день · почти прозрачный = отмечен как выполненный</div></section>
+ <section class="panel" id="workouts"><h2>🏋️ Домашние тренировки с резинкой</h2><div class="workouts">${Object.entries(exercises).map(([id,arr])=>`<div class="workout-card"><h3>${id} — ${trainingNames[id]}</h3>${arr.map((e,i)=>`<div class="exercise">${exSvg(i)}<div><b>${e[0]}</b><span>${e[1]}</span></div></div>`).join('')}<div class="quote">+ 15–20 мин йоги после тренировки</div></div>`).join('')}</div></section>
+ ${nutritionHtml()}
+ <section class="panel"><h2>🧴 Уход и бытовые дела</h2><div class="checks">${['Каждый день: увлажнить руки, локти, колени и ступни после душа','Пн: эссенция от чёрных точек','Вт: тканевая маска','Ср: эссенция с брусникой','Чт: эссенция от чёрных точек','Пт: тканевая маска','Сб: эссенция с брусникой','Вс: эссенция от чёрных точек','Пятница: уборка + стирка вещей','Раз в неделю: маникюр + педикюр'].map(x=>`<label><input type="checkbox"> ${x}</label>`).join('')}</div></section>
+ </main><aside class="side">
+ <section class="panel"><h2>💼 График работы</h2>${Object.entries(shifts).map(([d,s])=>`<div class="timeline"><div><b>${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d]}</b><span>${s}</span></div></div>`).join('')}</section>
+ <section class="panel"><h2>🎀 Цели</h2>${['Наладить сон','Тренировки 4×/нед','Йога после тренировок','Питание ≈1300 ккал','Больше личного времени','Постепенно бросить курить','Уход за собой','Уютный порядок дома'].map(x=>`<label><input type="checkbox"> ${x}</label>`).join('')}</section>
+ <section class="panel"><h2>🚭 Курение</h2><p class="small">Отмечай маленькие шаги: меньше сигарет → больше времени между ними → дни без сигарет.</p><div class="progress"><i></i></div></section>
+ <section class="panel"><p class="quote">«Маленькие шаги тоже считаются. Я выбираю себя ♥»</p></section>
+ </aside></div></div>`;
+}
+window.openDay=openDay;window.closeDay=closeDay;window.toggleDone=toggleDone;window.saveNotes=saveNotes;render();
+</script>
+</body>
+</html>
